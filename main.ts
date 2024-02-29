@@ -47,6 +47,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, l
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
     tiles.setCurrentTilemap(tilemap`level4`)
     tiles.placeOnTile(Player_1, tiles.getTileLocation(14, 15))
+    game.showLongText("Great you broke the wall now go open the chest", DialogLayout.Bottom)
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -371,7 +372,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile2`, function (sprite, l
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.weapon, function (sprite, otherSprite) {
     if (Player_1.overlapsWith(pickaxe)) {
-    	
+        sprites.destroy(pickaxe)
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {

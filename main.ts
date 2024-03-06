@@ -1,48 +1,32 @@
 namespace SpriteKind {
-    export const weapon = SpriteKind.create()
+    export const open = SpriteKind.create()
+    export const chest = SpriteKind.create()
+    export const chest2 = SpriteKind.create()
+    export const openchest = SpriteKind.create()
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile0`, function (sprite, location) {
     tiles.setCurrentTilemap(tilemap`level2`)
     tiles.placeOnTile(Player_1, tiles.getTileLocation(14, 15))
-    game.showLongText("Collect the axe to break the wall and collect the key", DialogLayout.Bottom)
-    pickaxe = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . 6 6 6 6 6 . . . . . . . . 
-        . . 6 f f f f f 6 e e . . . . . 
-        . . . 6 6 6 6 f f e e . . . . . 
-        . . . . . . . e f f 6 . . . . . 
-        . . . . . . e e e f f 6 . . . . 
-        . . . . . e e e . 6 f 6 . . . . 
-        . . . . e e e . . 6 f 6 . . . . 
-        . . . e e e . . . 6 f 6 . . . . 
-        . . e e e . . . . 6 f 6 . . . . 
-        . e e e . . . . . . 6 . . . . . 
-        e e e . . . . . . . . . . . . . 
-        e e . . . . . . . . . . . . . . 
-        `, SpriteKind.Player)
-    tiles.placeOnTile(pickaxe, tiles.getTileLocation(4, 8))
-    key = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . 5 5 5 5 . . . . . . . 
-        . . . . . 5 . 5 5 . . . . . . . 
-        . . . . . 5 5 . 5 . . . . . . . 
-        . . . . . 5 5 5 5 . . . . . . . 
-        . . . . . . . 5 . . . . . . . . 
-        . . . . . . . 5 . . . . . . . . 
-        . . . . . . . 5 . . . . . . . . 
-        . . . . . . . 5 . . . . . . . . 
-        . . . . . . . 5 5 . . . . . . . 
-        . . . . . . . 5 5 . . . . . . . 
-        . . . . . . . 5 5 . . . . . . . 
-        . . . . . . . 5 . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Player)
-    tiles.placeOnTile(key, tiles.getTileLocation(4, 11))
+    game.showLongText("Check the chest for the treasure", DialogLayout.Bottom)
+    chest3 = sprites.create(img`
+        . . b b b b b b b b b b b b . . 
+        . b e 4 4 4 4 4 4 4 4 4 4 e b . 
+        b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+        b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+        b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+        b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+        b e e e e e e e e e e e e e e b 
+        b e e e e e e e e e e e e e e b 
+        b b b b b b b d d b b b b b b b 
+        c b b b b b b c c b b b b b b c 
+        c c c c c c b c c b c c c c c c 
+        b e e e e e c b b c e e e e e b 
+        b e e e e e e e e e e e e e e b 
+        b c e e e e e e e e e e e e c b 
+        b b b b b b b b b b b b b b b b 
+        . b b . . . . . . . . . . b b . 
+        `, SpriteKind.chest)
+    tiles.placeOnTile(chest3, tiles.getTileLocation(4, 8))
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, location) {
     tiles.setCurrentTilemap(tilemap`level4`)
@@ -125,8 +109,12 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     true
     )
 })
-scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile`, function (sprite, location) {
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.purpleOuterNorth1, function (sprite, location) {
     tiles.setCurrentTilemap(tilemap`level13`)
+    game.splash("You are almost there open the chest")
+    sprites.destroyAllSpritesOfKind(SpriteKind.chest)
+    chest_3 = sprites.create(assets.image`chest 1`, SpriteKind.openchest)
+    tiles.placeOnTile(chest_3, tiles.getTileLocation(8, 0))
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -203,6 +191,10 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     500,
     true
     )
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.chest2, function (sprite, otherSprite) {
+    game.showLongText("This chest is empty go through the door to continue", DialogLayout.Bottom)
+    pause(5000)
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
@@ -281,7 +273,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     )
 })
 function enemy (enemylist: Image[]) {
-    if (true) {
+    if (3 <= info.life()) {
         for (let value of tiles.getTilesByType(sprites.builtin.brick)) {
             myenemy = sprites.create(enemylist._pickRandom(), SpriteKind.Enemy)
             tiles.placeOnTile(myenemy, value)
@@ -290,6 +282,10 @@ function enemy (enemylist: Image[]) {
         }
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.chest, function (sprite, otherSprite) {
+    game.showLongText("This chest is empty kick the wall down to continue ", DialogLayout.Bottom)
+    pause(5000)
+})
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
     Player_1,
@@ -367,21 +363,42 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     )
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile2`, function (sprite, location) {
-    tiles.setCurrentTilemap(tilemap`level1`)
+    tiles.setCurrentTilemap(tilemap`level14`)
     tiles.placeOnTile(Player_1, tiles.getTileLocation(14, 15))
+    game.showLongText("you're back at the start break the wall to continue", DialogLayout.Bottom)
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.weapon, function (sprite, otherSprite) {
-    if (Player_1.overlapsWith(pickaxe)) {
-        sprites.destroy(pickaxe)
-    }
+scene.onOverlapTile(SpriteKind.Player, sprites.castle.rock2, function (sprite, location) {
+    tiles.setCurrentTilemap(tilemap`level4`)
+    tiles.placeOnTile(Player_1, tiles.getTileLocation(14, 15))
+    game.showLongText("Great you broke the wall now go open the chest", DialogLayout.Bottom)
+    sprites.destroy(chest3)
+    chest22 = sprites.create(img`
+        . . b b b b b b b b b b b b . . 
+        . b e 4 4 4 4 4 4 4 4 4 4 e b . 
+        b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+        b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+        b e 4 4 4 4 4 4 4 4 4 4 4 4 e b 
+        b e e 4 4 4 4 4 4 4 4 4 4 e e b 
+        b e e e e e e e e e e e e e e b 
+        b e e e e e e e e e e e e e e b 
+        b b b b b b b d d b b b b b b b 
+        c b b b b b b c c b b b b b b c 
+        c c c c c c b c c b c c c c c c 
+        b e e e e e c b b c e e e e e b 
+        b e e e e e e e e e e e e e e b 
+        b c e e e e e e e e e e e e c b 
+        b b b b b b b b b b b b b b b b 
+        . b b . . . . . . . . . . b b . 
+        `, SpriteKind.chest2)
+    tiles.placeOnTile(chest22, tiles.getTileLocation(7, 0))
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
-    info.changeLifeBy(-1)
-    pause(5000)
+	
 })
+let chest22: Sprite = null
 let myenemy: Sprite = null
-let key: Sprite = null
-let pickaxe: Sprite = null
+let chest_3: Sprite = null
+let chest3: Sprite = null
 let Player_1: Sprite = null
 tiles.setCurrentTilemap(tilemap`level1`)
 Player_1 = sprites.create(assets.image`Player`, SpriteKind.Player)
